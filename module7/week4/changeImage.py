@@ -1,14 +1,17 @@
 #!/usr/bin/env python3
-
-import os, sys
 from PIL import Image
+import os, sys
 
-user = os.getenv('USER')
-image_directory = '/home/{}/supplier-data/images/'.format(user)
-for file in os.listdir(image_directory):
-  ''' aseguramos que no termine en un punto y que acaba en tiff'''
-  if not file.startswith('.') and file.endswith("tiff"):
-    im = Image.open(image_directory + file)
-    new = im.convert('RGB').resize((600,400))
-    new.save(imagen_directory + file, "JPEG")
-    new.close()
+path = "supplier-data/images/"
+pictures = os.listdir(path)
+
+for pic in pictures:
+  if 'tiff' in pic:
+    #grab the picture name without the .tiff extension
+    file_name = os.path.splitext(pic)[0]
+    outfile = "supplier-data/images/" + file_name + ".jpeg"
+    try:
+      Image.open(path + pic).convert("RGB").resize((600,400)).save(outfile,"JPEG")
+    except IOError:
+      print("cannot convert", pic)
+
